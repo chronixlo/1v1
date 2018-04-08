@@ -7,19 +7,11 @@ class Store {
 
   @action.bound
   p1action(action) {
-    if (action.event && action.event === 'defeat') {
-      this.player2.win();
-      return;
-    }
     this.player2.receive(action);
   }
 
   @action.bound
   p2action(action) {
-    if (action.event && action.event === 'defeat') {
-      this.player1.win();
-      return;
-    }
     this.player1.receive(action);
   }
 }

@@ -53,6 +53,11 @@ export default class Player {
 
   @action.bound
   receive(input) {
+    if (input.event && input.event === 'defeat') {
+      this.win();
+      return;
+    }
+
     if (input.damage) {
       this.hpLost += input.damage;
     }
@@ -112,11 +117,13 @@ export default class Player {
 
   @action.bound
   interrupt() {
-    if (this.casting || (this.lastInterrupt + INTERRUPT_COOLDOWN) > Date.now()) {
+    const now = Date.now();
+
+    if (this.casting || (this.lastInterrupt + INTERRUPT_COOLDOWN) > now || (this.silenced + SILENCE_TIME) > now) {
       return;
     }
 
-    this.lastInterrupt = Date.now();
+    this.lastInterrupt = now;
     
     this.action({
       effect: 'interrupt'

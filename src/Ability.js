@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+const cn = (...args) => args.filter(i => i).join(' ');
 class Ability extends Component {
   cooldownInterval;
 
@@ -27,14 +27,26 @@ class Ability extends Component {
       <div className="ability">
         {
           (!this.props.hideInactive || cooldownActive) &&
-          <div className="bar">
-            <div className="bar-face" style={{width}}></div>
-            <div className="bar-text">
-              {this.props.name}
+          <div className={cn('bar', this.props.className + 'bar')}>
+            <div className={cn('bar-face', this.props.className + 'bar-face')} style={{width}}></div>
+            <div className={cn('bar-text', this.props.className + 'bar-text')}>
+              {
+                (!cooldownActive || !this.props.nameActive) ?
+                this.props.name :
+                this.props.nameActive
+              }
               
               {
                 this.props.keybind &&
-                <span>({this.props.keybind})</span>
+                <span>
+                  &nbsp;(
+                    {
+                      (!cooldownActive || !this.props.keybindActive) ?
+                      this.props.keybind :
+                      this.props.keybindActive
+                    }
+                  )
+                </span>
               }
             </div>
           </div>

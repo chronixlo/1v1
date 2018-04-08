@@ -35,11 +35,31 @@ class Player extends Component {
         </div>
 
         <div className="player-abilities">
-          <Ability name="Interrupt" keybind={this.props.keys.interrupt} cooldownStart={player.lastInterrupt} cooldownLength={INTERRUPT_COOLDOWN} />
+          <Ability
+            name="Interrupt"
+            keybind={this.props.keys.interrupt}
+            cooldownStart={player.lastInterrupt}
+            cooldownLength={INTERRUPT_COOLDOWN}
+          />
           
-          <Ability name="Cast" keybind={this.props.keys.cast} cooldownStart={player.casting && player.casting.started} cooldownLength={player.casting && player.casting.time} reverse />
+          <Ability
+            name="Cast"
+            nameActive="Cancel"
+            keybind={this.props.keys.cast}
+            keybindActive={this.props.keys.cancel}
+            cooldownStart={player.casting && player.casting.started}
+            cooldownLength={player.casting && player.casting.time}
+            className="cast"
+            reverse
+          />
 
-          <Ability name="Silenced" cooldownStart={player.silenced} cooldownLength={SILENCE_TIME} hideInactive />
+          <Ability
+            name="Silenced!"
+            cooldownStart={player.silenced}
+            cooldownLength={SILENCE_TIME}
+            className="debuff"
+            hideInactive
+          />
         </div>
       </div>
     );
