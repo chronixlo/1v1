@@ -1,7 +1,15 @@
 import { action, observable } from 'mobx';
 import Player from './Player';
 
-class Store {
+const STATUS_CONNECTING = 1;
+const STATUS_WAITING = 2;
+const STATUS_READY = 3;
+const STATUS_INGAME = 4;
+const STATUS_POST = 5;
+
+class LocalGameStore {
+  @observable status = STATUS_READY;
+
   @observable player1 = new Player('Player 1', this.p1action);
   @observable player2 = new Player('Player 2', this.p2action);
 
@@ -16,4 +24,4 @@ class Store {
   }
 }
 
-export default new Store();
+export default new LocalGameStore();

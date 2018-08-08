@@ -2,12 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
 import './index.css';
-import store from './stores/store';
+import localGameStore from './stores/localGameStore';
+import onlineGameStore from './stores/onlineGameStore';
+import appStore from './stores/appStore';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 const stores = {
-  store
+  appStore,
+  localGameStore,
+  onlineGameStore
 };
 
 ReactDOM.render(

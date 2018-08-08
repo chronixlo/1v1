@@ -6,14 +6,19 @@ import { INTERRUPT_COOLDOWN, SILENCE_TIME } from './consts';
 @observer
 class Player extends Component {
   componentDidMount() {
-    document.addEventListener('keyup', this.keyUp);
+    if (this.props.keys)
+      document.addEventListener('keyup', this.keyUp);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.keyUp);
   }
 
   keyUp = (e) => {
     switch (e.key) {
-      case this.props.keys.cast: this.props.player.cast(); break;
-      case this.props.keys.cancel: this.props.player.cancel(); break;
-      case this.props.keys.interrupt: this.props.player.interrupt(); break;
+      case this.props.keys.cast: this.castTrigger = Date.now(); this.props.player.cast(); break;
+      case this.props.keys.cancel: this.castTrigger = Date.now(); this.props.player.cancel(); break;
+      case this.props.keys.interrupt: this.interruptTrigger = Date.now(); this.props.player.interrupt(); break;
       default:
     }
   }
@@ -37,18 +42,20 @@ class Player extends Component {
         <div className="player-abilities">
           <Ability
             name="Interrupt"
-            keybind={this.props.keys.interrupt}
+            keybind={this.props.keys && this.props.keys.interrupt}
             cooldownStart={player.lastInterrupt}
             cooldownLength={INTERRUPT_COOLDOWN}
+            useTrigger={player.lastInterrupt}
           />
           
           <Ability
             name="Cast"
             nameActive="Cancel"
-            keybind={this.props.keys.cast}
-            keybindActive={this.props.keys.cancel}
+            keybind={this.props.keys && this.props.keys.cast}
+            keybindActive={this.props.keys && this.props.keys.cancel}
             cooldownStart={player.casting && player.casting.started}
             cooldownLength={player.casting && player.casting.time}
+            useTrigger={player.casting && player.casting.started}
             className="cast"
             reverse
           />
@@ -58,6 +65,7 @@ class Player extends Component {
             cooldownStart={player.silenced}
             cooldownLength={SILENCE_TIME}
             className="debuff"
+            noBorder
             hideInactive
           />
         </div>

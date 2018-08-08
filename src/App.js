@@ -1,24 +1,33 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import Player from './Player';
+import LocalGame from './LocalGame';
+import OnlineGame from './OnlineGame';
+import { GAMEMODE_LOCAL } from './consts';
 
-@inject('store')
+@inject('appStore')
 @observer
 class App extends Component {
   render() {
     return (
-      <div>
-        <h1>1v1</h1>
-
-        <div className="container">
-          <Player player={this.props.store.player1} keys={{cast: 'a', cancel: 's', interrupt: 'd'}} />
-          <Player player={this.props.store.player2} keys={{cast: 'j', cancel: 'k', interrupt: 'l'}} />
-        </div>
-
+    <div>
+      <button className="online-toggle" onClick={this.props.appStore.toggleMode}>
+        {
+          this.props.appStore.gamemode === GAMEMODE_LOCAL ?
+          'Go online' :
+          'Go local'
+        }
+      </button>
+      
+      <div className="game-content">
         <div>
-          jou
+          {
+            this.props.appStore.gamemode === GAMEMODE_LOCAL ?
+            <LocalGame /> :
+            <OnlineGame />
+          }
         </div>
       </div>
+    </div>
     );
   }
 }

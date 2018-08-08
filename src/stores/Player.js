@@ -1,5 +1,5 @@
 import { action, computed, observable, reaction } from 'mobx';
-import { PLAYER_HP, INTERRUPT_COOLDOWN, SILENCE_TIME } from '../consts';
+import { CAST_TIME, PLAYER_HP, INTERRUPT_COOLDOWN, SILENCE_TIME, STUN_DAMAGE, CAST_DAMAGE } from '../consts';
 
 export default class Player {
   name;
@@ -17,7 +17,7 @@ export default class Player {
     return this.hp - this.hpLost;
   }
 
-  constructor(name, action) {
+  constructor(name, action = () => {}) {
     this.name = name;
     this.action = action;
 
@@ -64,7 +64,7 @@ export default class Player {
 
     if (input.effect) {
       if (input.effect === 'stun') {
-        this.hpLost += 2000;
+        this.hpLost += STUN_DAMAGE;
       } else if (input.effect === 'interrupt') {
 
         if (this.casting) {
@@ -87,7 +87,11 @@ export default class Player {
       return;
     }
 
-    const castTime = 1000;
+    this.action({
+      name: 'startcast'
+    });
+
+    const castTime = CAST_TIME;
 
     this.casting = {
         name: 'spell',
@@ -97,7 +101,7 @@ export default class Player {
 
     this.spellTimeout = setTimeout(() => {
       this.action({
-        damage: 200
+        damage: CAST_DAMAGE
       });
 
       this.casting = false;
@@ -109,6 +113,10 @@ export default class Player {
     if (!this.casting) {
       return;
     }
+
+    this.action({
+      name: 'cancel'
+    });
 
     clearTimeout(this.spellTimeout);
 
